@@ -376,7 +376,7 @@
             <div class="row">
                 <div class="col-md-6 border-right border-primary">
                     <div class="text-center text-md-right mr-md-3 mb-4 mb-md-0">
-                        <iframe width="100%" height="100%" style="border:0" loading="lazy" allowfullscreen src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJ5fHDdqTHlzMRP8lnCcMPMok&key=AIzaSyAc-QXWB4_dbvPDqQU3acosp8InF45vhVs"></iframe>
+                        <iframe width="100%" height="100%" style="border:0" loading="lazy" allowfullscreen src="<?php echo $google_map_key?>"></iframe>
                         <h4 class="mb-3">The Wedding Venue</h4>
                         <p class="mb-2">St Joseph The Worker Parish</p>
                         <p class="mb-0">4:00 PM - 5:00PM</p>
@@ -384,7 +384,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="text-center text-md-left ml-md-3">
-                        <iframe width="100%" height="100%" style="border:0" loading="lazy" allowfullscreen src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJKdlbGeTBlzMRbQxZm8-_ZKQ&key=AIzaSyAc-QXWB4_dbvPDqQU3acosp8InF45vhVs"></iframe>
+                        <iframe width="100%" height="100%" style="border:0" loading="lazy" allowfullscreen src="<?php echo $google_map_key?>"></iframe>
                         <h4 class="mb-3">The Reception</h4>
                         <p class="mb-2">El Circulo Events Place</p>
                         <p class="mb-0">6:00 PM - 10:00 PM</p> 
