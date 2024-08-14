@@ -6,5 +6,8 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Home::index');
-// $routes->get('id/(:any)', 'UserController::confirmRSVP/$1');
-$routes->get('/(:any)', 'UserController::getInviteeData/$1');
+$routes->get('rsvp/(:any)', 'UserController::getInviteeData/$1');
+$routes->get('/generate', 'UserController::inviteIDGenerator');
+
+$routes->post('/confirm', 'UserController::confirmRSVP');
+

@@ -1,6 +1,106 @@
 (function ($) {
     "use strict";
 
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+    
+    var music = document.getElementById("bgmusic");
+     function playmusic(){
+      music.play();
+      $(".btn-play").hide();
+     }
+
+     $( document ).ready(function() {
+        
+          var inviteID = $("#invite_id").val();
+          if(inviteID.trim().length > 0){
+              $("#confirmationModal").modal('show');
+          }
+          $( "#entourage-link" ).on( "click", function() {
+              $("#m-prin").find("p").addClass("animate__animated animate__lightSpeedInLeft  animate__delay-2s");
+              $("#f-prin").find("p").addClass("animate__animated animate__lightSpeedInRight  animate__delay-2s");
+          } );
+     });
+   
+     $(document).ajaxSend(function() {
+        $("#overlay").fadeIn(300);　
+     });
+
+    $('#btnConfirmAttendance').click(function(){
+        $("#confirmationModal").modal('show');
+    });
+        
+      $('#rsvp_confirm_yes').click(function(){
+        var rsvp_id = $("#invite_id").val().trim()
+        $.ajax({
+          url: 'http://localhost/codeigniter/project-root/public/confirm',
+          headers:{'X-Requested-With':'XMLHttpRequest'},
+          data:{ rsvp_id: rsvp_id, confirm: '1' },
+          type: 'POST',
+
+          success: function(data){
+            if(data.confirm ==1){
+                setTimeout(function(){
+                     toastr.success('Thank you for your confirmation!');
+                },1000);
+            }
+            $("#rsvp").hide();
+          }
+        }).done(function() {
+          setTimeout(function(){
+            $("#overlay").fadeOut(300);
+          },500);
+          setTimeout(function(){
+            $("#confirmationModal").modal("hide");
+          },900);
+         
+        });
+      });	
+
+            
+      $('#rsvp_confirm_no').click(function(){
+        var rsvp_id = $("#invite_id").val().trim()
+        $.ajax({
+          url: 'http://localhost/codeigniter/project-root/public/confirm',
+          headers:{'X-Requested-With':'XMLHttpRequest'},
+          data:{ rsvp_id: rsvp_id, confirm: '0' },
+          type: 'POST',
+
+          success: function(data){
+            if(data.confirm ==0 ){
+                setTimeout(function(){
+                    toastr.success('Thank you for your confirmation!');
+               },1000);
+
+               $("#rsvp").hide();
+            }
+          }
+        }).done(function() {
+          setTimeout(function(){
+            $("#overlay").fadeOut(300);
+          },500);
+          setTimeout(function(){
+            $("#confirmationModal").modal("hide");
+          },900);
+         
+        });
+      });	
+
     // Navbar on scrolling
     $(window).scroll(function () {
         if ($(this).scrollTop() > 200) {
@@ -26,25 +126,6 @@
             }
         }
     });
-
-
-    // Modal Video
-    $(document).ready(function () {
-        var $videoSrc;
-        $('.btn-play').click(function () {
-            $videoSrc = $(this).data("src");
-        });
-        console.log($videoSrc);
-
-        $('#videoModal').on('shown.bs.modal', function (e) {
-            $("#video").attr('src', $videoSrc + "?autoplay=1&amp;modestbranding=1&amp;showinfo=0");
-        })
-
-        $('#videoModal').on('hide.bs.modal', function (e) {
-            $("#video").attr('src', $videoSrc);
-        })
-    });
-
 
     // Scroll to Bottom
     $(window).scroll(function () {

@@ -9,6 +9,9 @@
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
 
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;600&display=swap" rel="stylesheet"> 
@@ -336,7 +339,7 @@
         </div>
     </div>
     <!-- Gallery End -->
-
+   
 
     <!-- Event Start -->
     <div class="container-fluid bg-entourage py-5" id="event">
@@ -488,50 +491,40 @@
 
 
     <!-- RSVP Start -->
-    <div class="container-fluid py-5" id="rsvp">
+    <div class="container-fluid py-5" id="rsvp" style="<?php  echo empty($data->main_invitee)  ? 'display:none;':'display:block;' ?>" >
         <div class="container py-5">
             <div class="section-title position-relative text-center">
                 <h6 class="text-uppercase text-primary mb-3" style="letter-spacing: 3px;">RSVP</h6>
-                <h1 class="font-secondary display-4">Join Our Party</h1>
+                <h1 class="font-secondary display-4">Join Our Wedding</h1>
                 <i class="far fa-heart text-dark"></i>
             </div>
             <div class="row justify-content-center">
-                <div class="col-lg-8">
+                <div class="col-lg-12">
                     <div class="text-center">
-                        <form>
-                            <div class="form-row">
-                                <div class="form-group col-sm-6">
-                                    <input type="text" class="form-control bg-secondary border-0 py-4 px-3" placeholder="Your Name"/>
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    <input type="email" class="form-control bg-secondary border-0 py-4 px-3" placeholder="Your Email"/>
-                                </div>
+                            <div class="text-center">
+                                <?php 
+                               // Check if each $companion is an object or associative array
+                                if(!empty($data->main_invitee)){
+                                    echo "<p>Dear <b>" . htmlspecialchars($data->main_invitee). ",</b></p></br>"; 
+                                    echo $data->companions_count >= 0 && !empty($data->companions_count)? '<p>Please confirm your attendance and list the accompanying family members:' : 'Please confirm your attendance'.'</p>';
+                                }
+                                // Check if companions is not empty and is an array
+                                if (!empty($data->companions) && is_array($data->companions)) {
+                                    // Iterate over the companions array
+                                    foreach ($data->companions as $companion) {
+                                      echo '<p><b>'.htmlspecialchars($companion->name)."</b></p>";
+                                    }
+                                    echo "</br>";
+                                    echo "</br>";
+                                    echo "<h3>Thank you!</h3>";
+                                } else {
+                                    echo "<p>No companions found.</p>";
+                                }
+                                ?>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group col-sm-6">
-                                    <select class="form-control bg-secondary border-0" style="height: 52px;">
-                                        <option>Number of Guest</option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    <select class="form-control bg-secondary border-0" style="height: 52px;">
-                                        <option>I'm Attending</option>
-                                        <option>All Events</option>
-                                        <option>Wedding Party</option>
-                                    </select>
-                                </div>
+                            <div style="margin-top:100px;">
+                                <button class="btn btn-primary font-weight-bold py-3 px-5" id="btnConfirmAttendance" type="button">Confirm Attendance</button>
                             </div>
-                            <div class="form-group">
-                                <textarea class="form-control bg-secondary border-0 py-2 px-3" rows="5" placeholder="Message" required="required"></textarea>
-                            </div>
-                            <div>
-                                <button class="btn btn-primary font-weight-bold py-3 px-5" type="submit">Submit</button>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -542,19 +535,28 @@
     <!-- Modal -->
     <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content">   
+            <div id="overlay">
+                <div class="cv-spinner"><span class="spinner"></span></div>
+            </div>    
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Attendance Check !</h5>
+                <h5 class="modal-title text-center" id="exampleModalLabel">RSVP</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body text-center">
-            <?php 
+            <input type="hidden" value="
+                <?php 
+                    if(!empty($data->invite_id)) {
+                        echo $data->invite_id;
+                    } 
+                    ?>" name="invite_id" id="invite_id">
+                <?php 
             // Check if each $companion is an object or associative array
             if(!empty($data->main_invitee)){
-                echo "Dear <b>" . htmlspecialchars($data->main_invitee). '</b>,<br><br>'. 
-                "Please confirm your attendance and list the accompanying family members:<br><br>";
+                echo "Dear <b>" . htmlspecialchars($data->main_invitee). "</b>,<br><br>"; 
+                echo $data->companions_count >= 0 && !empty($data->companions_count)? 'Please confirm your attendance and list the accompanying family members:<br><br>' : 'Please confirm your attendance<br><br>';
             }
             // Check if companions is not empty and is an array
             if (!empty($data->companions) && is_array($data->companions)) {
@@ -578,14 +580,12 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary"><?php 
-                if(!empty($data->companions_count)) { 
-                    echo $data->companions_count > 1 ? 'We':'I';    
-                }?> will attend</button>
-                <button type="button" class="btn btn-primary btn-danger"><?php 
-                if(!empty($data->companions_count)) { 
-                    echo $data->companions_count > 1 ? 'We':'I';    
-                }?> will not attend</button>
+                <?php if(!empty($data->companions_count) || !empty($data->invite_id)){?> 
+                <button type="button" class="btn btn-primary" id="rsvp_confirm_yes">Ofcourse, <?php 
+                    echo $data->companions_count >= 0 && !empty($data->companions_count)? 'We':'I'; ?> will attend</button>
+                <button type="button" class="btn btn-primary btn-danger" id="rsvp_confirm_no">Sorry, <?php 
+                    echo $data->companions_count >= 0 && !empty($data->companions_count)? 'We':'I'; ?> will not be able to attend</button>
+                <?php }?> 
             </div>
             </div>
         </div>
@@ -613,9 +613,9 @@
             </p>
         </div>
     </div>
+    
     <!-- Footer End -->
-
-
+   
     <!-- Scroll to Bottom -->
     <i class="fa fa-2x fa-angle-down text-white scroll-to-bottom"></i>
 
@@ -633,40 +633,12 @@
     <script src="<?php echo base_url('assets/lib/isotope/isotope.pkgd.min.js'); ?>"></script>
     <script src="<?php echo base_url('assets/lib/lightbox/js/lightbox.min.js'); ?>"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.js.map"></script>
     <!-- Template Javascript -->
     <script src="<?php echo base_url('assets/lib/lightbox/js/lightbox.min.js'); ?>"></script>
 
     <script src="<?php echo base_url('assets/js/main.js'); ?>"></script>
-
-    <script type="text/Javascript">
-      var music = document.getElementById("bgmusic");
-       function playmusic(){
-        music.play();
-        $(".btn-play").hide();
-       }
-
-       var path = window.location.pathname;
-
-        // Split the path into segments
-       var segments = path.split('/').filter(function(segment) {
-          return segment.length > 0; // Filter out any empty segments
-       });
-       // Get the last segment
-       var lastSegment = segments[segments.length - 1];
-
-       if(lastSegment.length >= 10){
-            $("#confirmationModal").modal('show');
-       }
-
-
-       $( document ).ready(function() {
-        $( "#entourage-link" ).on( "click", function() {
-            $("#m-prin").find("p").addClass("animate__animated animate__lightSpeedInLeft  animate__delay-2s");
-            $("#f-prin").find("p").addClass("animate__animated animate__lightSpeedInRight  animate__delay-2s");
-        } );
-       });
-      
-    </script>
 </body>
 
 </html>

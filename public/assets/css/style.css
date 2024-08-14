@@ -260,7 +260,55 @@ select {
 select {
   word-wrap: normal;
 }
+#toast-container > .toast-success { 
+  background-color: darkgreen; 
+  width: 96% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+.toast { max-width: 100%; }
+#button{
+  display:block;
+  margin:20px auto;
+  padding:10px 30px;
+  background-color:#eee;
+  border:solid #ccc 1px;
+  cursor: pointer;
+}
+#overlay{	
+  position: absolute;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  height:100%;
+  display: none;
+  background: rgba(0,0,0,0.6);
+}
+.cv-spinner {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
 
+}
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px #ddd solid;
+  border-top: 4px darkgreen solid;
+  border-radius: 50%;
+  animation: sp-anime 0.8s infinite linear;
+}
+
+@keyframes sp-anime {
+  100% { 
+    transform: rotate(360deg); 
+  }
+}
+
+.is-hide{
+  display:none;
+}
 button,
 [type="button"],
 [type="reset"],
@@ -5503,7 +5551,8 @@ a.close.disabled {
   justify-content: space-between;
   padding: 1rem 1rem;
   border-bottom: 2px solid #dee2e6;
-}odal-footer
+  background-color: darkseagreen;
+}
 
 .modal-header .close {
   padding: 1rem 1rem;
